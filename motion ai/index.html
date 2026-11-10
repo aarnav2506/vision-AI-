@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VisionPulse — Spatial Motion &amp; Biometric Studio</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Ambient Apple-style Aurora Mesh Background -->
+  <div class="ambient-bg" id="ambientBg">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <!-- Apple Dynamic Island Alert HUD -->
+  <div class="dynamic-island-wrapper">
+    <div class="dynamic-island" id="dynamicIsland" role="status" aria-live="polite">
+      <div class="di-compact">
+        <span class="di-status-dot" id="diDot"></span>
+        <span class="di-compact-label" id="diCompactText">VisionPulse Neural Engine Standby</span>
+        <div class="di-mini-wave" id="diMiniWave">
+          <span></span><span></span><span></span><span></span>
+        </div>
+      </div>
+      <div class="di-expanded" id="diExpanded">
+        <div class="di-avatar-wrap">
+          <img id="diAvatar" src="" alt="Profile" class="di-avatar" />
+        </div>
+        <div class="di-info">
+          <div class="di-title-row">
+            <span class="di-title" id="diTitle">Recognized Profile</span>
+            <span class="di-badge" id="diConfidence">98% Match</span>
+          </div>
+          <div class="di-meta-row">
+            <span class="di-pill" id="diExpression">Expression: Neutral</span>
+            <span class="di-pill di-pill-action" id="diAction">Action: Stationary</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Top Minimal Frosted Navigation Bar -->
+  <header class="top-nav">
+    <div class="nav-brand">
+      <div class="brand-logo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="3.5" />
+          <path d="M2 12c2.5-5 6-7.5 10-7.5s7.5 2.5 10 7.5c-2.5 5-6 7.5-10 7.5S4.5 17 2 12z" />
+        </svg>
+      </div>
+      <div>
+        <span class="brand-name">VisionPulse <span class="brand-pro">Studio</span></span>
+        <span class="brand-sub">Spatial Motion, Expression &amp; Action Intelligence</span>
+      </div>
+    </div>
+
+    <nav class="nav-links">
+      <a href="#studioSection" class="nav-link active">Camera Studio</a>
+      <a href="#enrollmentSection" class="nav-link">Profiles &amp; AI Training</a>
+      <a href="#notepadSection" class="nav-link">Activity Log</a>
+    </nav>
+
+    <div class="nav-actions">
+      <button class="btn-glass" id="linkFolderBtn" title="Select a folder on your computer to save JPG, WAV, and user_data.txt directly">
+        📂 Select Save Folder
+      </button>
+      <div class="server-pill" id="serverStatusPill">
+        <span class="pulse-dot"></span>
+        <span id="serverStatusText">Engine Ready</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-container">
+    <!-- Minimal Apple-Style Hero Header -->
+    <section class="hero-section">
+      <div class="hero-eyebrow">
+        <span class="eyebrow-tag">SPATIAL VISION ENGINE</span>
+        <span>320×200 Optical Motion Tracking · 3D Face Blendshapes · 10s Auto-Capture</span>
+      </div>
+      <h1 class="hero-title">
+        Fluid Motion Sensing.<br />
+        <span class="gradient-text">Designed for Precision.</span>
+      </h1>
+    </section>
+
+    <!-- SECTION 1: LIVE CAMERA MOTION & BIOMETRIC STUDIO -->
+    <section id="studioSection" class="studio-grid">
+      <!-- Left Column: Live Camera Viewport + HUD -->
+      <div class="viewport-card glass-card">
+        <div class="card-header">
+          <div class="header-title-group">
+            <span class="live-indicator" id="liveIndicator">STANDBY</span>
+            <h2>Neural Vision Viewport</h2>
+            <span class="fps-badge" id="fpsBadge">60 FPS</span>
+          </div>
+          <div class="hud-toggles">
+            <button class="chip-btn active" id="toggleMeshBtn">Face &amp; Motion Box</button>
+            <button class="chip-btn active" id="togglePoseBtn">Pose &amp; Hand Tracker</button>
+            <button class="chip-btn active" id="toggleHeatBtn">Optical Flow Grid</button>
+          </div>
+        </div>
+
+        <div class="video-stage" id="videoStage">
+          <video id="webcamVideo" autoplay playsinline muted></video>
+          <canvas id="hudCanvas"></canvas>
+
+          <!-- Floating HUD Corner Badges -->
+          <div class="hud-overlay-top">
+            <div class="hud-pill" id="hudIdentityPill">
+              <span class="hud-dot"></span>
+              <span id="hudIdentityText">Ready</span>
+            </div>
+            <div class="hud-pill hud-pill-grade" id="hudGradePill">
+              Auto-Capture: <strong id="hudTimerBadge">10s Interval</strong>
+            </div>
+          </div>
+
+          <div class="hud-overlay-bottom">
+            <div class="hud-telemetry-chip">
+              <span class="chip-label">EXPRESSION</span>
+              <span class="chip-value" id="hudExpressionValue">Neutral</span>
+            </div>
+            <div class="hud-telemetry-chip">
+              <span class="chip-label">ACTION / MOTION</span>
+              <span class="chip-value" id="hudActionValue">Stationary</span>
+            </div>
+            <div class="hud-telemetry-chip">
+              <span class="chip-label">MOTION ENERGY</span>
+              <span class="chip-value" id="hudMotionDelta">0.0%</span>
+            </div>
+            <div class="hud-telemetry-chip">
+              <span class="chip-label">VOICE LEVEL</span>
+              <span class="chip-value" id="hudAudioLevel">-60 dB</span>
+            </div>
+          </div>
+
+          <!-- Placeholder when camera is off -->
+          <div class="camera-placeholder" id="cameraPlaceholder">
+            <div class="placeholder-orb"></div>
+            <h3>Start Spatial Camera, Mic &amp; Location</h3>
+            <p>Allow camera, microphone, and location access to start real-time hand/body motion tracking, expression decoding, GPS logging, and automatic 10-second photo (.jpg) &amp; voice (.wav) dataset saving.</p>
+            <div class="placeholder-actions">
+              <button class="btn-primary btn-large" id="startCameraBtn">
+                Enable Camera, Mic &amp; Location (10s Auto-Save)
+              </button>
+              <button class="btn-secondary btn-large" id="startSimBtn">
+                Run Interactive Simulator
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Action Bar + Sensitivity Slider -->
+        <div class="viewport-toolbar">
+          <div class="toolbar-group">
+            <button class="btn-glass" id="stopCameraBtn" disabled>Stop</button>
+            <button class="btn-glass" id="quickEnrollBtn" disabled>+ Enroll Current Face</button>
+            <label class="apple-toggle" style="margin-left: 8px;">
+              <span style="font-size:0.78rem; color:var(--text-secondary);">Sensitivity ($\tau$):</span>
+              <input type="range" id="sensitivitySlider" min="10" max="50" value="20" style="display:inline-block; width:90px; accent-color:#2997ff;" />
+            </label>
+          </div>
+          <div class="toolbar-group">
+            <button class="btn-accent" id="capturePhotoBtn" disabled>📸 Save JPG Now</button>
+            <button class="btn-record" id="recordVoiceBtn" disabled>🎙️ Save 4s WAV Now</button>
+            <button class="btn-glass" id="soundAlertToggleBtn">🔔 Chime: ON</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Real-Time Telemetry, Expressions, Actions & Security Grade -->
+      <div class="telemetry-column">
+        <!-- Security Grading Card -->
+        <div class="glass-card telemetry-card">
+          <div class="card-header-compact">
+            <h3>Real-Time Mathematical Grading</h3>
+            <span class="grade-badge" id="securityGradeBadge">A+</span>
+          </div>
+          <div class="security-meter-wrap">
+            <div class="security-score-row">
+              <span>Composite Detection Index</span>
+              <strong id="securityScoreNum">98 / 100</strong>
+            </div>
+            <div class="progress-track">
+              <div class="progress-fill grade-fill" id="securityProgressFill" style="width: 98%;"></div>
+            </div>
+            <div class="sub-metrics-grid">
+              <div class="sub-metric">
+                <span>Profile Match</span>
+                <strong id="metricIdentity">Standby</strong>
+              </div>
+              <div class="sub-metric">
+                <span>Motion Velocity</span>
+                <strong id="metricVelocity">0.0 px/f</strong>
+              </div>
+              <div class="sub-metric">
+                <span>Lighting Quality</span>
+                <strong id="metricLighting">98% Optimal</strong>
+              </div>
+              <div class="sub-metric">
+                <span>10s Auto-Capture</span>
+                <strong id="metricZone">Standby</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Facial Expression Blendshape Decoder -->
+        <div class="glass-card telemetry-card">
+          <div class="card-header-compact">
+            <h3>Facial Expression Analysis</h3>
+            <span class="pill-tag" id="dominantExpressionTag">Neutral</span>
+          </div>
+          <div class="expression-bars">
+            <div class="exp-row">
+              <span class="exp-name">😊 Smiling / Happy</span>
+              <div class="exp-track"><div class="exp-fill" id="expHappy" style="width: 4%"></div></div>
+              <span class="exp-val" id="expHappyVal">4%</span>
+            </div>
+            <div class="exp-row">
+              <span class="exp-name">😮 Surprised</span>
+              <div class="exp-track"><div class="exp-fill" id="expSurprised" style="width: 2%"></div></div>
+              <span class="exp-val" id="expSurprisedVal">2%</span>
+            </div>
+            <div class="exp-row">
+              <span class="exp-name">🧐 Focused</span>
+              <div class="exp-track"><div class="exp-fill" id="expFocused" style="width: 6%"></div></div>
+              <span class="exp-val" id="expFocusedVal">6%</span>
+            </div>
+            <div class="exp-row">
+              <span class="exp-name">🗣️ Speaking</span>
+              <div class="exp-track"><div class="exp-fill" id="expSpeaking" style="width: 2%"></div></div>
+              <span class="exp-val" id="expSpeakingVal">2%</span>
+            </div>
+            <div class="exp-row">
+              <span class="exp-name">😉 Blink / Wink</span>
+              <div class="exp-track"><div class="exp-fill" id="expWink" style="width: 3%"></div></div>
+              <span class="exp-val" id="expWinkVal">3%</span>
+            </div>
+            <div class="exp-row">
+              <span class="exp-name">😐 Neutral</span>
+              <div class="exp-track"><div class="exp-fill" id="expNeutral" style="width: 88%"></div></div>
+              <span class="exp-val" id="expNeutralVal">88%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Popular Actions & Motion Sensor Classifier -->
+        <div class="glass-card telemetry-card">
+          <div class="card-header-compact">
+            <h3>Action &amp; Gesture Matrix</h3>
+            <span class="pill-tag pill-action" id="dominantActionTag">Stationary</span>
+          </div>
+          <div class="action-chips-grid" id="actionChipsGrid">
+            <div class="action-chip" data-action="Waving Hand">👋 Waving Hand</div>
+            <div class="action-chip" data-action="Approaching">🚶 Approaching</div>
+            <div class="action-chip" data-action="Hands Raised">🙌 Hands Raised</div>
+            <div class="action-chip" data-action="Head Nodding">↕️ Head Nodding</div>
+            <div class="action-chip" data-action="Head Shaking">↔️ Head Shaking</div>
+            <div class="action-chip" data-action="Leaning">↗️ Leaning</div>
+            <div class="action-chip" data-action="Thumbs Up">👍 Thumbs Up</div>
+            <div class="action-chip" data-action="Rapid Motion">⚡ Rapid Motion</div>
+            <div class="action-chip active" data-action="Stationary">🧘 Stationary</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: REGISTERED PROFILES & AI DATASET STUDIO -->
+    <section id="enrollmentSection" class="bento-two-col">
+      <!-- Left: Register Profile -->
+      <div class="glass-card">
+        <div class="card-header">
+          <div>
+            <h2>Registered Profiles</h2>
+            <p class="card-sub">Enrolled profiles trigger a Dynamic Island recognition alert when entering the frame.</p>
+          </div>
+          <span class="count-pill" id="registeredUsersCount">0 Profiles</span>
+        </div>
+
+        <form id="registerUserForm" class="enroll-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="userNameInput">Display Name</label>
+              <input type="text" id="userNameInput" placeholder="Enter display name" required />
+            </div>
+            <div class="form-group">
+              <label for="userRoleInput">Role</label>
+              <select id="userRoleInput">
+                <option value="Authorized Member">Authorized Member</option>
+                <option value="Guest Profile">Guest Profile</option>
+                <option value="VIP Alert">VIP Alert</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row enroll-actions-row">
+            <button type="submit" class="btn-primary">📸 Register from Camera</button>
+            <label class="btn-secondary file-upload-btn">
+              📁 Upload Reference JPG
+              <input type="file" id="uploadPhotoInput" accept="image/jpeg,image/png,image/webp" hidden />
+            </label>
+          </div>
+        </form>
+
+        <div class="users-list" id="registeredUsersList"></div>
+      </div>
+
+      <!-- Right: AI Training Captures -->
+      <div class="glass-card">
+        <div class="card-header">
+          <div>
+            <h2>AI Training Studio (10s Auto JPG &amp; WAV)</h2>
+            <p class="card-sub" id="saveLocationLabel">Save Location: On-Page Gallery + Local Disk (<code>database/photos/</code> &amp; <code>database/voice/</code>)</p>
+          </div>
+          <div class="dataset-counters">
+            <span class="count-pill" id="photosCountBadge">0 JPGs</span>
+            <span class="count-pill" id="voicesCountBadge">0 WAVs</span>
+          </div>
+        </div>
+
+        <div class="audio-studio-box">
+          <div class="audio-studio-header">
+            <span>Voice Waveform &amp; 10s Rolling Audio Buffer</span>
+            <span class="rec-timer" id="voiceRecordStatus">Standby</span>
+          </div>
+          <canvas id="audioWaveCanvas" width="520" height="72"></canvas>
+          <div class="training-inputs-row" style="align-items: center;">
+            <input type="text" id="trainingNoteInput" placeholder="Optional training label..." />
+            <button type="button" class="btn-accent" id="manualCaptureBundleBtn">Save JPG + WAV Now</button>
+            <label class="apple-toggle" title="Automatically download each 10s JPG and WAV to your computer's Downloads folder">
+              <input type="checkbox" id="autoDownloadToggle" />
+              <span class="toggle-slider"></span>
+              <span class="toggle-label">Auto-Download</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="captures-gallery" id="capturesGallery"></div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: ACTIVITY LOG VIEWER -->
+    <section id="notepadSection" class="notepad-section">
+      <div class="glass-card">
+        <div class="card-header">
+          <div>
+            <h2>Activity Log (<code>user_data.txt</code>)</h2>
+            <p class="card-sub">Real-time log of enrolled profiles and 10-second interval captures.</p>
+          </div>
+          <div class="notepad-actions">
+            <button class="btn-glass" id="refreshTxtBtn">Refresh</button>
+            <button class="btn-primary" id="downloadTxtBtn">Download user_data.txt</button>
+          </div>
+        </div>
+        <pre class="notepad-viewer" id="notepadViewer">Ready.</pre>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
